@@ -1,6 +1,7 @@
 package tests.gitlab.duedate;
 
 import tests.GradingUtility;
+import tests.gitlab.ckpt1.MinFourHeapTests;
 
 public class DueDateTests extends GradingUtility {
     public static void main(String[] args) {
@@ -9,7 +10,7 @@ public class DueDateTests extends GradingUtility {
 
     protected Class<?>[] getTests() {
         return new Class<?>[] {
-                HashTrieMapTests.class
+                MinFourHeapTests.class, HashTrieMapTests.class
         };
     }
 }

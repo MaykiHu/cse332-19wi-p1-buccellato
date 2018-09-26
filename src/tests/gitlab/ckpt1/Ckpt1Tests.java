@@ -11,8 +11,7 @@ public class Ckpt1Tests extends GradingUtility {
         return new Class<?>[] {
                 ArrayStackTests.class,
                 ListFIFOQueueTests.class,
-                CircularArrayFIFOQueueTests.class,
-                MinFourHeapTests.class
+                CircularArrayFIFOQueueTests.class
         };
     }
 }
