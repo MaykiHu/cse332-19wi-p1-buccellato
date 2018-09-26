@@ -36,12 +36,8 @@ TODO: Answer this question
 -----
 
 ## WorkLists ##
-### peek(i) ###
-The ADT for a WorkList explicitly forbids access to the middle elements.  However, the FixedSizeFIFOWorkList has a peek(i) method which allows you to do exactly that. Why is this an acceptable addition to the WorkList ADT in this particular case? Why don't we do this in general?
-
-In other words, what about fixed-sized FIFO worklists makes peek(i) make sense? Why does peek(i) NOT make sense in other worklist implementations? 
-
-**You should consider only the interface**, NOT the underlying implementation of our FixedSizeFIFOWorkList.
+### WorkList Interface ###
+We've implemented several data structures that all share the WorkList interface. What is the advantage of having several data structures with the same interface? Why not give each of them their own interface?
 
 <blockquote>
 TODO: Answer this question
