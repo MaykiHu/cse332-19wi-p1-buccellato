@@ -50,14 +50,14 @@ public class CircularArrayFIFOQueue<E> extends FixedSizeFIFOWorkList<E> {
 
     @Override
     public int compareTo(FixedSizeFIFOWorkList<E> other) {
-        // You will implement this method in p2. Leave this method unchanged for p1.
+        // You will implement this method in project 2. Leave this method unchanged for project 1.
         throw new NotYetImplementedException();
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public boolean equals(Object obj) {
-        // You will finish implementing this method in p2. Leave this method unchanged for p1.
+        // You will finish implementing this method in project 2. Leave this method unchanged for project 1.
         if (this == obj) {
             return true;
         }
@@ -75,7 +75,7 @@ public class CircularArrayFIFOQueue<E> extends FixedSizeFIFOWorkList<E> {
 
     @Override
     public int hashCode() {
-        // You will implement this method in p2. Leave this method unchanged for p1.
+        // You will implement this method in project 2. Leave this method unchanged for project 1.
         throw new NotYetImplementedException();
     }
 }
