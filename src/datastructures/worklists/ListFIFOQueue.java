@@ -52,6 +52,7 @@ public class ListFIFOQueue<E> extends FIFOWorkList<E> {
     public E next() {
         E val = front.val;
         front = front.next;
+        size--;
         return val;
     }
 
