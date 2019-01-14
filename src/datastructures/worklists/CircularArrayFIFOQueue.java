@@ -35,6 +35,7 @@ public class CircularArrayFIFOQueue<E> extends FixedSizeFIFOWorkList<E> {
         } 
         tail = (tail + 1) % capacity();
         queue[tail] = work;
+        size++;
     }
 
     @Override
@@ -54,6 +55,7 @@ public class CircularArrayFIFOQueue<E> extends FixedSizeFIFOWorkList<E> {
         }
         E val = queue[head];
         head = (head + 1) % capacity();
+        size--;
         return val;
     }
     
