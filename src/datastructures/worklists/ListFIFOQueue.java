@@ -50,6 +50,9 @@ public class ListFIFOQueue<E> extends FIFOWorkList<E> {
 
     @Override
     public E next() {
+    	if (!hasWork()) {
+        	throw new NoSuchElementException();
+        }
         E val = front.val;
         front = front.next;
         size--;
