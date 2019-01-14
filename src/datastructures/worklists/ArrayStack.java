@@ -47,19 +47,15 @@ public class ArrayStack<E> extends LIFOWorkList<E> {
 
     @Override
     public E peek() {
-    	if (isEmpty()) {
+    	if (!hasWork()) {
     		throw new NoSuchElementException();
     	}
         return stack[front - 1];
     }
-    
-    private boolean isEmpty() {
-    	return front == 0;
-    }
 
     @Override
     public E next() {
-        if (isEmpty()) {
+        if (!hasWork()) {
         	throw new NoSuchElementException();
         }
         E value = stack[front - 1];

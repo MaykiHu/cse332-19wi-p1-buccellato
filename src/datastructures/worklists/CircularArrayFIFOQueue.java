@@ -1,5 +1,7 @@
 package datastructures.worklists;
 
+import java.util.NoSuchElementException;
+
 import cse332.exceptions.NotYetImplementedException;
 import cse332.interfaces.worklists.FixedSizeFIFOWorkList;
 
@@ -8,14 +10,31 @@ import cse332.interfaces.worklists.FixedSizeFIFOWorkList;
  * for method specifications.
  */
 public class CircularArrayFIFOQueue<E> extends FixedSizeFIFOWorkList<E> {
+	private int head;
+	private int tail;
+	private int size;
+	private E[] queue;
+	
     public CircularArrayFIFOQueue(int capacity) {
         super(capacity);
-        throw new NotYetImplementedException();
+        setup(capacity);
     }
 
+    @SuppressWarnings("unchecked")
+	private void setup(int capacity) {
+    	head = 0;
+        tail = -1;
+        size = 0;
+        queue = (E[])new Comparable[capacity];
+    }
+    
     @Override
     public void add(E work) {
-        throw new NotYetImplementedException();
+        if (isFull()) {
+        	throw new IllegalStateException();
+        } 
+        tail = (tail + 1) % capacity();
+        queue[tail] = work;
     }
 
     @Override
@@ -30,22 +49,32 @@ public class CircularArrayFIFOQueue<E> extends FixedSizeFIFOWorkList<E> {
     
     @Override
     public E next() {
-        throw new NotYetImplementedException();
+        if (size == 0) {
+        	throw new NoSuchElementException(); 
+        }
+        E val = queue[head];
+        head = (head + 1) % capacity();
+        return val;
     }
     
     @Override
     public void update(int i, E value) {
-        throw new NotYetImplementedException();
+    	if (!hasWork()) {
+    		throw new NoSuchElementException();
+    	} else if (i >= size || i < 0) {
+    		throw new IndexOutOfBoundsException();
+    	}
+        queue[(head + i) % capacity()] = value;
     }
     
     @Override
     public int size() {
-        throw new NotYetImplementedException();
+        return size;
     }
     
     @Override
     public void clear() {
-        throw new NotYetImplementedException();
+        setup(capacity());
     }
 
     @Override

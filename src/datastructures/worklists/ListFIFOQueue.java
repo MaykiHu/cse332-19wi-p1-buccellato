@@ -1,8 +1,6 @@
 package datastructures.worklists;
 
 import java.util.NoSuchElementException;
-
-import cse332.exceptions.NotYetImplementedException;
 import cse332.interfaces.worklists.FIFOWorkList;
 
 /**
@@ -33,7 +31,7 @@ public class ListFIFOQueue<E> extends FIFOWorkList<E> {
 
     @Override
     public void add(E work) {
-    	if  (isEmpty()) {
+    	if  (!hasWork()) {
     		front = new Node(work);
     		back = front;
     	}
@@ -44,7 +42,7 @@ public class ListFIFOQueue<E> extends FIFOWorkList<E> {
 
     @Override
     public E peek() {
-        if (isEmpty()) {
+        if (!hasWork()) {
         	throw new NoSuchElementException();
         }
         return front.val;
@@ -65,10 +63,6 @@ public class ListFIFOQueue<E> extends FIFOWorkList<E> {
     @Override
     public void clear() {
         setup();
-    }
-    
-    private boolean isEmpty() {
-    	return front == null;
     }
     
     private void setup() {
