@@ -10,8 +10,8 @@ import cse332.interfaces.worklists.FixedSizeFIFOWorkList;
  * for method specifications.
  */
 public class CircularArrayFIFOQueue<E> extends FixedSizeFIFOWorkList<E> {
-	private int head;
-	private int tail;
+	private int front;
+	private int back;
 	private int size;
 	private E[] queue;
 	
@@ -22,8 +22,8 @@ public class CircularArrayFIFOQueue<E> extends FixedSizeFIFOWorkList<E> {
 
     @SuppressWarnings("unchecked")
 	private void setup(int capacity) {
-    	head = 0;
-        tail = -1;
+    	front = 0;
+        back = -1;
         size = 0;
         queue = (E[])new Comparable[capacity];
     }
@@ -33,19 +33,27 @@ public class CircularArrayFIFOQueue<E> extends FixedSizeFIFOWorkList<E> {
         if (isFull()) {
         	throw new IllegalStateException();
         } 
-        tail = (tail + 1) % capacity();
-        queue[tail] = work;
+        back = (back + 1) % capacity();
+        queue[back] = work;
         size++;
     }
 
     @Override
     public E peek() {
-        throw new NotYetImplementedException();
+    	if (!hasWork()) {
+        	throw new NoSuchElementException();
+        }
+        return queue[front];
     }
     
     @Override
     public E peek(int i) {
-        throw new NotYetImplementedException();
+    	if (!hasWork()) {
+        	throw new NoSuchElementException();
+        } else if (i >= size || i < 0) {
+    		throw new IndexOutOfBoundsException();
+    	}
+        return queue[(front + i) % capacity()];
     }
     
     @Override
@@ -53,8 +61,8 @@ public class CircularArrayFIFOQueue<E> extends FixedSizeFIFOWorkList<E> {
         if (size == 0) {
         	throw new NoSuchElementException(); 
         }
-        E val = queue[head];
-        head = (head + 1) % capacity();
+        E val = queue[front];
+        front = (front + 1) % capacity();
         size--;
         return val;
     }
@@ -66,7 +74,7 @@ public class CircularArrayFIFOQueue<E> extends FixedSizeFIFOWorkList<E> {
     	} else if (i >= size || i < 0) {
     		throw new IndexOutOfBoundsException();
     	}
-        queue[(head + i) % capacity()] = value;
+        queue[(front + i) % capacity()] = value;
     }
     
     @Override
