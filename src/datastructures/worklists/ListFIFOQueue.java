@@ -16,12 +16,9 @@ public class ListFIFOQueue<E> extends FIFOWorkList<E> {
 		E val;
 		Node next; 
 		
-		public Node() {
-			next = null;
-		}
-		
 		public Node(E val) {
 			this.val = val;
+			next = null;
 		}
 	}
     
@@ -34,10 +31,11 @@ public class ListFIFOQueue<E> extends FIFOWorkList<E> {
     	if  (!hasWork()) {
     		front = new Node(work);
     		back = front;
+    	} else {
+    		back.next = new Node(work);
+    		back = back.next;
     	}
-        back.next = new Node(work);
-        back = back.next;
-        size++;
+    	size++;
     }
 
     @Override
@@ -71,7 +69,7 @@ public class ListFIFOQueue<E> extends FIFOWorkList<E> {
     
     private void setup() {
     	front = null;
-        back = null;
+        back = front;
         size = 0;
     }
 }
