@@ -17,7 +17,7 @@ public class ListFIFOQueue<E> extends FIFOWorkList<E> {
 		Node next; 
 		
 		public Node() {
-			next = new Node(null);
+			next = null;
 		}
 		
 		public Node(E val) {
