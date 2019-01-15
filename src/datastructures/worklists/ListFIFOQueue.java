@@ -70,7 +70,7 @@ public class ListFIFOQueue<E> extends FIFOWorkList<E> {
     }
     
     private void setup() {
-    	front = new Node();
+    	front = null;
         back = null;
         size = 0;
     }
