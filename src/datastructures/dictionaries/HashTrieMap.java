@@ -51,10 +51,13 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
         		prevVal = (V) children.get(nextChar).value;
         		t = children.get(nextChar);
         	} else {
-        		t = new HashTrieNode((V) nextChar);
+        		t = new HashTrieNode();
         		children.put((A) nextChar, t);
         	}
         	children = (HashMap<A, HashTrieMap<A, K, V>.HashTrieNode>) t.pointers;
+        	if (!itr.hasNext()) {
+        		children.get(nextChar).value = value;
+        	}
         }
 		return prevVal;
     }
