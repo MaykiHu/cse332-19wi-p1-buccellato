@@ -4,8 +4,6 @@ import cse332.interfaces.worklists.PriorityWorkList;
 
 import java.util.NoSuchElementException;
 
-import cse332.exceptions.NotYetImplementedException;
-
 /**
  * See cse332/interfaces/worklists/PriorityWorkList.java
  * for method specifications.
@@ -14,15 +12,14 @@ public class MinFourHeap<E extends Comparable<E>> extends PriorityWorkList<E> {
     /* Do not change the name of this field; the tests rely on it to work correctly. */
     private E[] data;
     private int size;
-    private int capacity;
     
     public MinFourHeap() {
         setup();
     }
     
-    private void setup() {
-    	capacity = 10;
-    	data = (E[])new Comparable[capacity];
+    @SuppressWarnings("unchecked")
+	private void setup() {
+    	data = (E[])new Comparable[10];
     	size = 0;
     }
     
@@ -51,8 +48,8 @@ public class MinFourHeap<E extends Comparable<E>> extends PriorityWorkList<E> {
         	}
         }
         if (size == data.length) {
-        	capacity *= 2;
-        	E[] newData = (E[])new Comparable[capacity];
+        	@SuppressWarnings("unchecked")
+			E[] newData = (E[])new Comparable[2 * data.length];
         	for (int i = 0; i < data.length; i++) {
         	  	newData[i] = data[i];
         	}
