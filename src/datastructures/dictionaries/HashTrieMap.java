@@ -39,24 +39,25 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
     @Override
     public V insert(K key, V value) {
     	if (key == null || value == null) {
-    		throw new NullPointerException();
+    		throw new IllegalArgumentException();
     	}
     	V prevVal = null;
-    	HashMap<A, HashTrieNode> children = (HashMap<A, HashTrieMap<A, K, V>.HashTrieNode>) root.pointers;
-        Iterator<A> itr = key.iterator(); // Should check if instance of
+    	HashMap<A, HashTrieNode> children = (HashMap<A, HashTrieMap<A, K, V>.HashTrieNode>) 
+    										root.pointers;
+    	Iterator<A> itr = key.iterator(); // Should check if instance of
         while(itr.hasNext()) {
-        	A nextChar = itr.next();
-        	HashTrieNode t;
-        	if (children.containsKey(nextChar)) {
-        		prevVal = (V) children.get(nextChar).value;
-        		t = children.get(nextChar);
+        	A currChar = itr.next();
+        	HashTrieNode currNode;
+        	if (children.containsKey(currChar)) {
+        		prevVal = (V) children.get(currChar).value;
+        		currNode = children.get(currChar);
         	} else {
-        		t = new HashTrieNode();
-        		children.put((A) nextChar, t);
+        		currNode = new HashTrieNode();
+        		children.put((A) currChar, currNode);
         	}
-        	children = (HashMap<A, HashTrieMap<A, K, V>.HashTrieNode>) t.pointers;
+        	children = (HashMap<A, HashTrieMap<A, K, V>.HashTrieNode>) currNode.pointers;
         	if (!itr.hasNext()) {
-        		children.get(nextChar).value = value;
+        		currNode.value = value;
         	}
         }
 		return prevVal;
@@ -69,7 +70,7 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
 
     @Override
     public boolean findPrefix(K key) {
-        throw new NotYetImplementedException();
+    	throw new NotYetImplementedException();
     }
 
     @Override
