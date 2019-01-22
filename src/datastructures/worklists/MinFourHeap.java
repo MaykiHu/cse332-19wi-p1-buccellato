@@ -12,6 +12,7 @@ public class MinFourHeap<E extends Comparable<E>> extends PriorityWorkList<E> {
     /* Do not change the name of this field; the tests rely on it to work correctly. */
     private E[] data;
     private int size;
+    private int capacity;
     
     public MinFourHeap() {
         setup();
@@ -19,7 +20,8 @@ public class MinFourHeap<E extends Comparable<E>> extends PriorityWorkList<E> {
     
     @SuppressWarnings("unchecked")
 	private void setup() {
-    	data = (E[])new Comparable[10];
+    	capacity = 10;
+    	data = (E[])new Comparable[capacity];
     	size = 0;
     }
     
@@ -32,24 +34,17 @@ public class MinFourHeap<E extends Comparable<E>> extends PriorityWorkList<E> {
     public void add(E work) {
         data[size] = work;
         size++;
-        if (size >= 2) {
-        	boolean isOrdered = false;
-        	int loc = size - 1;
-        	while (loc != 0 && !isOrdered) {
-        		E childData = data[loc];
-        		E parentData = data[parentLoc(loc)];
-        		if (childData.compareTo(parentData) < 0) {
-        			data[parentLoc(loc)] = childData;
-        			data[loc] = parentData;
-        			loc = parentLoc(loc);
-        		} else { // New element can be added as a child
-        			isOrdered = true;
-        		}
-        	}
-        }
+        int childLoc = size - 1;
+        E childData = data[childLoc];    
+        while (childLoc > 0 && childData.compareTo(data[getParentLoc(childLoc)]) < 0) {
+            data[childLoc] = data[getParentLoc(childLoc)];
+            childLoc = getParentLoc(childLoc);
+        }                   
+        data[childLoc] = childData;
         if (size == data.length) {
+        	capacity *= 2;
         	@SuppressWarnings("unchecked")
-			E[] newData = (E[])new Comparable[2 * data.length];
+			E[] newData = (E[])new Comparable[capacity];
         	for (int i = 0; i < data.length; i++) {
         	  	newData[i] = data[i];
         	}
@@ -57,10 +52,14 @@ public class MinFourHeap<E extends Comparable<E>> extends PriorityWorkList<E> {
     	}
     }
     
-    private int parentLoc(int childLoc) {
+    private int getParentLoc(int childLoc) {
     	return (childLoc - 1) / 4;
     }
 
+    private int getChildLoc(int parentLoc) {
+    	return 4 * parentLoc + 1;
+    }
+    
     @Override
     public E peek() {
         if (!hasWork()) {
@@ -74,42 +73,41 @@ public class MinFourHeap<E extends Comparable<E>> extends PriorityWorkList<E> {
         if (!hasWork()) {
         	throw new NoSuchElementException();
         }
-        E min = peek();
+        E min = data[0];
         size--;
-        if (size == 0) {
-        	data[0] = null;
-        	return min;
-        }
         data[0] = data[size];
         data[size] = null;
+        int childLoc;
         int parentLoc = 0;
+        E loc = data[parentLoc];
         boolean isOrdered = false;
-        while (!isOrdered && 4 * parentLoc + 1 < size) {
-        	int nChild = 0;
-        	int childLoc = 4 * parentLoc + nChild + 1;
-        	int priority = data[childLoc].compareTo(data[parentLoc]);
-        	int swapPos = childLoc;
-        	while (nChild < 3 && childLoc + 1 < size) {
-        		childLoc++;
-        		nChild++;
-        		int currPriority = data[childLoc].compareTo(data[parentLoc]);
-        		if (currPriority < priority) {
-        			priority = currPriority;
-        			swapPos = childLoc;
-        		}
-        	}
-        	if (priority < 0) {
-        		E newParent = data[swapPos];
-        		data[swapPos] = data[parentLoc];
-        		data[parentLoc] = newParent;
-        		parentLoc = swapPos;
-         	} else {
-        		isOrdered = true;
-        	}
+        while (4 * parentLoc + 1 < size && !isOrdered) {
+            childLoc = priorityChildLoc(parentLoc);
+            if (data[childLoc].compareTo(loc) < 0) {
+                data[parentLoc] = data[childLoc];
+                parentLoc = childLoc;
+            } else {
+            	isOrdered = true;
+            }
         }
+        data[parentLoc] = loc;
         return min;
     }
 
+    public int priorityChildLoc(int parentLoc) {
+    	int priorityChildLoc = getChildLoc(parentLoc);
+    	int nChild = 1;
+    	int nextChildLoc = priorityChildLoc + 1;
+    	while (nChild < 4 && nextChildLoc < size) {
+    		if (data[nextChildLoc].compareTo(data[priorityChildLoc]) < 0) {
+    			priorityChildLoc = nextChildLoc;
+    		}
+    		nChild++;
+    		nextChildLoc++;
+    	}
+    	return priorityChildLoc;
+    }
+    
     @Override
     public int size() {
         return size;
