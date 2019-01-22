@@ -98,7 +98,7 @@ public class MinFourHeap<E extends Comparable<E>> extends PriorityWorkList<E> {
     	int priorityChildLoc = getChildLoc(parentLoc);
     	int nChild = 1;
     	int nextChildLoc = priorityChildLoc + 1;
-    	while (nChild < 4 && nextChildLoc < size) {
+    	while (nextChildLoc < size && nChild < 4) {
     		if (data[nextChildLoc].compareTo(data[priorityChildLoc]) < 0) {
     			priorityChildLoc = nextChildLoc;
     		}
