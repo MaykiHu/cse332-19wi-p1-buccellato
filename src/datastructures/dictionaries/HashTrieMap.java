@@ -43,9 +43,9 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
     	}
     	V prevVal = null;
     	HashMap<A, HashTrieNode> children = (HashMap<A, HashTrieMap<A, K, V>.HashTrieNode>) root.pointers;
-        Iterator<K> itr = (Iterator<K>) key.iterator(); // Should check if instance of
+        Iterator<A> itr = key.iterator(); // Should check if instance of
         while(itr.hasNext()) {
-        	K nextChar = itr.next();
+        	A nextChar = itr.next();
         	HashTrieNode t;
         	if (children.containsKey(nextChar)) {
         		prevVal = (V) children.get(nextChar).value;
