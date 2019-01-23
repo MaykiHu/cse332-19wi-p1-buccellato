@@ -49,11 +49,11 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
         	A currChar = itr.next();
         	HashTrieNode currNode;
         	if (children.containsKey(currChar)) {
-        		prevVal = (V) children.get(currChar).value;
+        		prevVal = children.get(currChar).value;
         		currNode = children.get(currChar);
         	} else {
         		currNode = new HashTrieNode();
-        		children.put((A) currChar, currNode);
+        		children.put(currChar, currNode);
         	}
         	children = (HashMap<A, HashTrieMap<A, K, V>.HashTrieNode>) currNode.pointers;
         	if (!itr.hasNext()) {
@@ -76,7 +76,7 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
         while(itr.hasNext() && hasPath) {
         	A currChar = itr.next();
         	if (children.containsKey(currChar)) {
-        		val = (V) children.get(currChar).value;
+        		val = children.get(currChar).value;
         		children = (HashMap<A, HashTrieMap<A, K, V>.HashTrieNode>) 
         				children.get(currChar).pointers;
         	} else {
