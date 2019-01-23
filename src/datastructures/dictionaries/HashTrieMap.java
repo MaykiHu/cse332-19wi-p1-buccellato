@@ -89,6 +89,9 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
 
     @Override
     public boolean findPrefix(K key) {
+    	if (key == null) {
+    		throw new IllegalArgumentException();
+    	}
     	HashMap<A, HashTrieNode> children = (HashMap<A, HashTrieMap<A, K, V>.HashTrieNode>) 
 				root.pointers;
 		Iterator<A> itr = key.iterator();
