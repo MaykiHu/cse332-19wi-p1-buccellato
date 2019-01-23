@@ -56,6 +56,7 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
         	}
         	if (!itr.hasNext()) {
         		children.get(currChar).value = value;
+        		size++;
         	}
         	children = (HashMap<A, HashTrieMap<A, K, V>.HashTrieNode>)
         				children.get(currChar).pointers;
@@ -167,11 +168,13 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
 	        		children = parent;
 	        	}
 	        }
+        	size--;
         }
     }
     
     @Override
     public void clear() {
         this.root = new HashTrieNode();
+        size = 0;
     }
 }
