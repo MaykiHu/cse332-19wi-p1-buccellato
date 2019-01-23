@@ -9,6 +9,7 @@ import cse332.exceptions.NotYetImplementedException;
 import cse332.interfaces.misc.BString;
 import cse332.interfaces.trie.TrieMap;
 import datastructures.worklists.ArrayStack;
+import datastructures.worklists.ListFIFOQueue;
 
 /**
  * See cse332/interfaces/trie/TrieMap.java
@@ -105,15 +106,14 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
 		}
 		return true;
     }
-
+    
     @Override
     public void delete(K key) {
-        if (key == null || root == null) {
+    	
+        if (key == null || this.root == null) {
         	throw new IllegalArgumentException();
         }
-        if (find(key) != null) {
-        	
-        	// 2, if its not a prefix and not a suffix
+        if (find(key) != null) { // If the key exists        	
         	ArrayStack nodes = new ArrayStack();
         	ArrayStack characters = new ArrayStack();
         	HashMap<A, HashTrieNode> children = (HashMap<A, HashTrieMap<A, K, V>.HashTrieNode>)
@@ -127,32 +127,45 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
         		characters.add(currChar);
         		HashTrieNode currNode = children.get(currChar);
         		loc++;
-        		if (currNode.value != null) {
-        			suffixLoc = loc;
+        		if (currNode != null) {
+        			children = (HashMap<A, HashTrieMap<A, K, V>.HashTrieNode>) currNode.pointers;
+        			if (currNode.value != null) {
+        				suffixLoc = loc;
+        			}
         		}
-        		children = (HashMap<A, HashTrieMap<A, K, V>.HashTrieNode>) currNode.pointers;
         	}
-        	HashMap<A, HashTrieNode> node = (HashMap<A, HashTrieMap<A, K, V>.HashTrieNode>) 
-        									nodes.peek();
-        	if (!findPrefix(key) && suffixLoc == 0) {
+        	if (!findPrefix(key) && suffixLoc == 0) { // If it's not a prefix and not a suffix
         		for (int i = 0; i < nodes.size(); i++) {
         			((Map<A, HashTrieMap<A, K, V>.HashTrieNode>) 
         					nodes.next()).remove(characters.next());
         		}
-        	}
-        	
-        	// 3rd case, if it is a prefix
-	        if (findPrefix(key) == true) {
+        	} else if (findPrefix(key) == true) { // If it is a prefix
 	        	V val = null;
-	            boolean hasPath = true;
-	            while(itr.hasNext() && hasPath) {
+	            while(itr.hasNext()) {
 	            	A currChar = itr.next();
-	            	// if (children.containsKey(currChar)) {
+	            	if (children.containsKey(currChar)) {
 	            		val = children.get(currChar).value;
+	            		if (val != null && !itr.hasNext()) {
+	            			children.get(currChar).value = null;
+	            		}
 	            		children = (HashMap<A, HashTrieMap<A, K, V>.HashTrieNode>) 
 	            				children.get(currChar).pointers;
+	            	}
 	            }
-	            children.put((A) val, null); // this "deletes" the value assigned to that key 
+	        } else if (suffixLoc != 0 && children.isEmpty()) { // If it is a suffix
+	        	for (int i = 0; i < key.size() - suffixLoc; i++) {
+	        		((Map<A, HashTrieMap<A, K, V>.HashTrieNode>) 
+	        				nodes.next()).remove(characters.next());
+	        	}
+	        } else { // It isn't a prefix or a suffix
+	        	while (children == null) {
+	        		((Map<A, HashTrieMap<A, K, V>.HashTrieNode>) 
+	        				nodes.next()).remove(characters.next());
+	        		HashMap<A, HashTrieNode> parent = 
+							(HashMap<A, HashTrieMap<A, K, V>.HashTrieNode>)
+							nodes.peek();
+	        		children = parent;
+	        	}
 	        }
         }
     }
