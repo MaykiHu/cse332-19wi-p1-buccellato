@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 import cse332.exceptions.NotYetImplementedException;
 import cse332.interfaces.misc.BString;
 import cse332.interfaces.trie.TrieMap;
+import datastructures.worklists.ArrayStack;
 
 /**
  * See cse332/interfaces/trie/TrieMap.java
@@ -91,7 +92,7 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
     		throw new IllegalArgumentException();
     	}
     	HashMap<A, HashTrieNode> children = (HashMap<A, HashTrieMap<A, K, V>.HashTrieNode>) 
-				root.pointers;
+											root.pointers;
 		Iterator<A> itr = key.iterator();
 		while (itr.hasNext()) {
 			A currChar = itr.next();
@@ -111,7 +112,32 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
         	throw new IllegalArgumentException();
         }
         if (find(key) != null) {
-        	
+        	ArrayStack nodes = new ArrayStack();
+        	ArrayStack characters = new ArrayStack();
+        	HashMap<A, HashTrieNode> children = (HashMap<A, HashTrieMap<A, K, V>.HashTrieNode>)
+        										root.pointers;
+        	Iterator<A> itr = key.iterator();
+        	int suffixLoc = 0;
+        	int loc = 0;
+        	while (itr.hasNext()) {
+        		nodes.add(children);
+        		A currChar = itr.next();
+        		characters.add(currChar);
+        		HashTrieNode currNode = children.get(currChar);
+        		loc++;
+        		if (currNode.value != null) {
+        			suffixLoc = loc;
+        		}
+        		children = (HashMap<A, HashTrieMap<A, K, V>.HashTrieNode>) currNode.pointers;
+        	}
+        	HashMap<A, HashTrieNode> node = (HashMap<A, HashTrieMap<A, K, V>.HashTrieNode>) 
+        									nodes.peek();
+        	if (!findPrefix(key) && suffixLoc == 0) {
+        		for (int i = 0; i < nodes.size(); i++) {
+        			((Map<A, HashTrieMap<A, K, V>.HashTrieNode>) 
+        					nodes.next()).remove(characters.next());
+        		}
+        	}
         }
     }
     
