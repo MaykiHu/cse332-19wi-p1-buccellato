@@ -75,10 +75,10 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
         boolean hasPath = true;
         while(itr.hasNext() && hasPath) {
         	A currChar = itr.next();
-        	HashTrieNode currNode;
         	if (children.containsKey(currChar)) {
         		val = (V) children.get(currChar).value;
-        		currNode = children.get(currChar);
+        		children = (HashMap<A, HashTrieMap<A, K, V>.HashTrieNode>) 
+        				children.get(currChar).pointers;
         	} else {
         		hasPath = false;
         		val = null;
