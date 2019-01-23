@@ -112,6 +112,8 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
         	throw new IllegalArgumentException();
         }
         if (find(key) != null) {
+        	
+        	// 2, if its not a prefix and not a suffix
         	ArrayStack nodes = new ArrayStack();
         	ArrayStack characters = new ArrayStack();
         	HashMap<A, HashTrieNode> children = (HashMap<A, HashTrieMap<A, K, V>.HashTrieNode>)
@@ -138,6 +140,20 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
         					nodes.next()).remove(characters.next());
         		}
         	}
+        	
+        	// 3rd case, if it is a prefix
+	        if (findPrefix(key) == true) {
+	        	V val = null;
+	            boolean hasPath = true;
+	            while(itr.hasNext() && hasPath) {
+	            	A currChar = itr.next();
+	            	// if (children.containsKey(currChar)) {
+	            		val = children.get(currChar).value;
+	            		children = (HashMap<A, HashTrieMap<A, K, V>.HashTrieNode>) 
+	            				children.get(currChar).pointers;
+	            }
+	            children.put((A) val, null); // this "deletes" the value assigned to that key 
+	        }
         }
     }
     
