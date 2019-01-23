@@ -47,11 +47,12 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
     	if (key.isEmpty()) {
     		if (root.value == null) {
     			size++;
+    			root.value = value;
+    			return prevVal;
     		}
+    		prevVal = root.value;
     		root.value = value;
-    		if (root.value != null) {
-    			return root.value;
-    		}
+    		return prevVal;
     	}
     	HashMap<A, HashTrieNode> children = (HashMap<A, HashTrieMap<A, K, V>.HashTrieNode>) 
     										root.pointers;
@@ -79,6 +80,9 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
     		throw new IllegalArgumentException();
     	}
     	V val = null;
+    	if (key.isEmpty() && root.value != null) {
+    		return root.value;
+    	}
     	HashMap<A, HashTrieNode> children = (HashMap<A, HashTrieMap<A, K, V>.HashTrieNode>)
     										root.pointers;
         Iterator<A> itr = key.iterator(); // Should check if instance of
@@ -102,6 +106,11 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
     	if (key == null) {
     		throw new IllegalArgumentException();
     	}
+    	
+    	if (key.isEmpty()) {
+    		return true;
+    	}
+    	
     	HashMap<A, HashTrieNode> children = (HashMap<A, HashTrieMap<A, K, V>.HashTrieNode>) 
 											root.pointers;
 		Iterator<A> itr = key.iterator();
@@ -135,7 +144,9 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
         										root.pointers;
         	Iterator<A> itr = key.iterator();
         	int suffixLoc = 0;
+        	int commonLoc = 0;
         	int loc = 0;
+        	boolean isPrefix = false;
         	while (itr.hasNext()) {
         		nodes.add(children);
         		A currChar = itr.next();
@@ -144,45 +155,38 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
         		loc++;
         		if (currNode != null) {
         			children = (HashMap<A, HashTrieMap<A, K, V>.HashTrieNode>) currNode.pointers;
-        			if (!children.isEmpty()) {
+        			if (children.size() > 1) {
+        				commonLoc = loc;
+        			}
+        			if (currNode.value != null && itr.hasNext()) {
         				suffixLoc = loc;
+        			}
+        			if (!itr.hasNext() && !children.isEmpty()) {
+        				isPrefix = true;
         			}
         		}
         	}
-        	if (!findPrefix(key) && suffixLoc == 0) { // If it's not a prefix and not a suffix
-        		for (int i = 0; i < nodes.size(); i++) {
-        			((Map<A, HashTrieMap<A, K, V>.HashTrieNode>) 
-        					nodes.next()).remove(characters.next());
-        		}
-        	} else if (findPrefix(key) == true) { // If it is a prefix
-	        	V val = null;
-	            while(itr.hasNext()) {
-	            	A currChar = itr.next();
-	            	if (children.containsKey(currChar)) {
-	            		val = children.get(currChar).value;
-	            		if (val != null && !itr.hasNext()) {
-	            			children.get(currChar).value = null;
-	            		}
-	            		children = (HashMap<A, HashTrieMap<A, K, V>.HashTrieNode>) 
-	            				children.get(currChar).pointers;
-	            	}
-	            }
-	        } else if (suffixLoc != 0 && children.isEmpty()) { // If it is a suffix
-	        	for (int i = 0; i < key.size() - suffixLoc; i++) {
+        	// If it's not a prefix, suffix, and shares no nodes
+	        if (!isPrefix && suffixLoc == 0 && commonLoc == 0) { 
+	        	for (int i = 0; i < nodes.size(); i++) {
 	        		((Map<A, HashTrieMap<A, K, V>.HashTrieNode>) 
 	        				nodes.next()).remove(characters.next());
 	        	}
-	        } else { // It isn't a prefix or a suffix
-	        	while (children == null) {
-	        		((Map<A, HashTrieMap<A, K, V>.HashTrieNode>) 
-	        				nodes.next()).remove(characters.next());
-	        		HashMap<A, HashTrieNode> parent = 
-							(HashMap<A, HashTrieMap<A, K, V>.HashTrieNode>)
-							nodes.peek();
-	        		children = parent;
-	        	}
-	        }
-        	size--;
+	       	} else if (isPrefix && suffixLoc == 0 && commonLoc == 0) { // If it is a prefix
+	       		((Map<A, HashTrieMap<A, K, V>.HashTrieNode>) 
+	        			nodes.next()).get(characters.next()).value = null;
+		    } else if (suffixLoc != 0 && !isPrefix && commonLoc == 0) { // If it is a suffix
+		        for (int i = 0; i < key.size() - suffixLoc; i++) {
+		        	((Map<A, HashTrieMap<A, K, V>.HashTrieNode>) 
+		        			nodes.next()).remove(characters.next());
+		        } // Not a prefix or suffix but share common nodes
+		    } else {
+		        for (int i = 0; i < key.size() - commonLoc; i++) {
+		        	((Map<A, HashTrieMap<A, K, V>.HashTrieNode>) 
+		        			nodes.next()).remove(characters.next());
+		        }
+		    }
+	        size--;
         }
     }
     
