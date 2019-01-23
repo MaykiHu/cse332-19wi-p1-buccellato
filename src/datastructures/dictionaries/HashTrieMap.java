@@ -69,7 +69,8 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
     		throw new IllegalArgumentException();
     	}
     	V val = null;
-    	HashMap<A, HashTrieNode> children = (HashMap<A, HashTrieMap<A, K, V>.HashTrieNode>) root.pointers;
+    	HashMap<A, HashTrieNode> children = (HashMap<A, HashTrieMap<A, K, V>.HashTrieNode>)
+    										root.pointers;
         Iterator<A> itr = key.iterator(); // Should check if instance of
         boolean hasPath = true;
         while(itr.hasNext() && hasPath) {
