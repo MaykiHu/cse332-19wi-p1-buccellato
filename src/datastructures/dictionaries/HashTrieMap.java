@@ -70,7 +70,19 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
 
     @Override
     public boolean findPrefix(K key) {
-    	throw new NotYetImplementedException();
+    	HashMap<A, HashTrieNode> children = (HashMap<A, HashTrieMap<A, K, V>.HashTrieNode>) 
+				root.pointers;
+		Iterator<A> itr = key.iterator();
+		while (itr.hasNext()) {
+			A currChar = itr.next();
+			if (!children.containsKey(currChar)) {
+				return false;
+			} else {
+				children = (HashMap<A, HashTrieMap<A, K, V>.HashTrieNode>) 
+				children.get(currChar).pointers;
+			}
+		}
+		return true;
     }
 
     @Override
