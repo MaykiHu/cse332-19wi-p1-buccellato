@@ -44,6 +44,15 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
     		throw new IllegalArgumentException();
     	}
     	V prevVal = null;
+    	if (key.isEmpty()) {
+    		if (root.value == null) {
+    			size++;
+    		}
+    		root.value = value;
+    		if (root.value != null) {
+    			return root.value;
+    		}
+    	}
     	HashMap<A, HashTrieNode> children = (HashMap<A, HashTrieMap<A, K, V>.HashTrieNode>) 
     										root.pointers;
     	Iterator<A> itr = key.iterator(); // Should check if instance of
@@ -114,7 +123,12 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
         if (key == null || this.root == null) {
         	throw new IllegalArgumentException();
         }
-        if (find(key) != null) { // If the key exists        	
+        if (key.isEmpty()) {
+        	if (root.value != null) {
+        		root.value = null;
+        		size--;
+        	}
+        } else if (find(key) != null) { // If the key exists        	
         	ArrayStack nodes = new ArrayStack();
         	ArrayStack characters = new ArrayStack();
         	HashMap<A, HashTrieNode> children = (HashMap<A, HashTrieMap<A, K, V>.HashTrieNode>)
@@ -130,7 +144,7 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
         		loc++;
         		if (currNode != null) {
         			children = (HashMap<A, HashTrieMap<A, K, V>.HashTrieNode>) currNode.pointers;
-        			if (currNode.value != null) {
+        			if (!children.isEmpty()) {
         				suffixLoc = loc;
         			}
         		}
