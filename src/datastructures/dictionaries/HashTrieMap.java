@@ -47,18 +47,16 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
     	Iterator<A> itr = key.iterator(); // Should check if instance of
         while(itr.hasNext()) {
         	A currChar = itr.next();
-        	HashTrieNode currNode;
         	if (children.containsKey(currChar)) {
         		prevVal = children.get(currChar).value;
-        		currNode = children.get(currChar);
         	} else {
-        		currNode = new HashTrieNode();
-        		children.put(currChar, currNode);
+        		children.put(currChar, new HashTrieNode());
         	}
-        	children = (HashMap<A, HashTrieMap<A, K, V>.HashTrieNode>) currNode.pointers;
         	if (!itr.hasNext()) {
-        		currNode.value = value;
+        		children.get(currChar).value = value;
         	}
+        	children = (HashMap<A, HashTrieMap<A, K, V>.HashTrieNode>)
+        				children.get(currChar).pointers;
         }
 		return prevVal;
     }
@@ -109,11 +107,14 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
 
     @Override
     public void delete(K key) {
-        if (key == null) {
+        if (key == null || root == null) {
         	throw new IllegalArgumentException();
         }
+        if (find(key) != null) {
+        	
+        }
     }
-
+    
     @Override
     public void clear() {
         this.root = new HashTrieNode();
