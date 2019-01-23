@@ -61,7 +61,25 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
 
     @Override
     public V find(K key) {
-        throw new NotYetImplementedException();
+    	if (key == null) {
+    		throw new NullPointerException();
+    	}
+    	V val = null;
+    	HashMap<A, HashTrieNode> children = (HashMap<A, HashTrieMap<A, K, V>.HashTrieNode>) root.pointers;
+        Iterator<K> itr = (Iterator<K>) key.iterator(); // Should check if instance of
+        boolean hasPath = true;
+        while(itr.hasNext() && hasPath) {
+        	K currChar = itr.next();
+        	HashTrieNode t;
+        	if (children.containsKey(currChar)) {
+        		val = (V) children.get(currChar).value;
+        		t = children.get(currChar);
+        	} else {
+        		hasPath = false;
+        		val = null;
+        	}
+        }
+		return val;
     }
 
     @Override
