@@ -66,18 +66,18 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
     @Override
     public V find(K key) {
     	if (key == null) {
-    		throw new NullPointerException();
+    		throw new IllegalArgumentException();
     	}
     	V val = null;
     	HashMap<A, HashTrieNode> children = (HashMap<A, HashTrieMap<A, K, V>.HashTrieNode>) root.pointers;
-        Iterator<K> itr = (Iterator<K>) key.iterator(); // Should check if instance of
+        Iterator<A> itr = key.iterator(); // Should check if instance of
         boolean hasPath = true;
         while(itr.hasNext() && hasPath) {
-        	K currChar = itr.next();
-        	HashTrieNode t;
+        	A currChar = itr.next();
+        	HashTrieNode currNode;
         	if (children.containsKey(currChar)) {
         		val = (V) children.get(currChar).value;
-        		t = children.get(currChar);
+        		currNode = children.get(currChar);
         	} else {
         		hasPath = false;
         		val = null;
