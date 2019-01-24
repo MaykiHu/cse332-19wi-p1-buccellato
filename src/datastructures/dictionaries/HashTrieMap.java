@@ -166,13 +166,19 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
         		A character = (A) characters.next();
         		HashTrieNode node = refs.get(character);
         		boolean hasChildren = !node.pointers.isEmpty();
-        		if (!hasChildren) { // No following nodes
-        			refs.remove(character);
-        		} else { // There are children
-        			if (key.size() - refs.size() == 1) {
+        		if (key.size() - nodes.size() == 1) {
+        			if (hasChildren) {
         				node.value = null;
-        			} 
-        			continueRemove = false;
+        				continueRemove = false;
+        			} else {
+        				refs.clear();
+        			}
+        		} else {
+        			if (node.value != null || hasChildren) {
+        				continueRemove = false;
+        			} else {
+        				refs.remove(character);
+        			}
         		}
         	}
 	        size--;
